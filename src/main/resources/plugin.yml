@@ -1,0 +1,6 @@
+name: GoodSkyblock
+version: ${project.version}
+main: io.github.goodskyblock.Skyblock
+api-version: 1.13
+authors: [Joeyoey, JavaDebug]
+description: A good skyblock plugin
