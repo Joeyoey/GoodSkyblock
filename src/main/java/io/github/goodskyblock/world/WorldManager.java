@@ -6,7 +6,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 
 public class WorldManager {
-    private World islandWorld = null;
+    private World islandWorld;
 
     public WorldManager() {
         this.islandWorld = Bukkit.getWorld("GoodSkyblockIslandWorld");
@@ -23,6 +23,4 @@ public class WorldManager {
         }
         return this.islandWorld;
     }
-
-
 }

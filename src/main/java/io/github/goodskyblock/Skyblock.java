@@ -3,9 +3,7 @@ package io.github.goodskyblock;
 import io.github.goodskyblock.cache.IslandCache;
 import io.github.goodskyblock.storage.Storage;
 import io.github.goodskyblock.storage.implementations.YamlStorage;
-import io.github.goodskyblock.world.WorldGenerator;
 import io.github.goodskyblock.world.WorldManager;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Skyblock extends JavaPlugin {
@@ -29,14 +27,14 @@ public final class Skyblock extends JavaPlugin {
     }
 
     public Storage getStorage() {
-        return storage;
+        return this.storage;
     }
 
     public IslandCache getIslandCache() {
-        return islandCache;
+        return this.islandCache;
     }
 
     public WorldManager getWorldManager() {
-        return worldManager;
+        return this.worldManager;
     }
 }

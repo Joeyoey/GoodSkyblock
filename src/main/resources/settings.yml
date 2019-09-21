@@ -1,0 +1,17 @@
+# This is the storage type the plugin will use to save and load data
+# You can choose between the following
+# - yaml
+# - mysql
+storage-type: yaml
+
+database:
+  host: localhost
+  port: 3306
+  database: 'good-skyblock'
+  username: root
+  password: ''
+  pool-settings:
+    max-pool-size: 10
+    min-idle: 10
+    max-lifetime: 1800000
+    connection-timeout: 5000

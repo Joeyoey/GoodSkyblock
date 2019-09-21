@@ -6,23 +6,18 @@ import org.bukkit.generator.ChunkGenerator;
 
 import java.util.Random;
 
-import static org.bukkit.Bukkit.createChunkData;
-
 public class WorldGenerator extends ChunkGenerator {
 
     @Override
     public ChunkGenerator.ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, ChunkGenerator.BiomeGrid biome) {
-        ChunkGenerator.ChunkData chunk = createChunkData(world);
-
-        for (int X = 0; X < 16; X++) {
-            for (int Z = 0; Z < 16; Z++) {
-                for (int Y = 0; Y < 256; Y++) {
-                    chunk.setBlock(X, Y, Z, Material.AIR);
+        ChunkGenerator.ChunkData chunk = super.createChunkData(world);
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                for (int y = 0; y < 256; y++) {
+                    chunk.setBlock(x, y, z, Material.AIR);
                 }
             }
         }
         return chunk;
     }
-
-
 }
