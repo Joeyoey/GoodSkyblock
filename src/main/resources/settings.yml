@@ -15,3 +15,8 @@ database:
     min-idle: 10
     max-lifetime: 1800000
     connection-timeout: 5000
+
+world-options:
+  grid-size: 200 # This corresponds to 20,000 islands spaces in your world, WARNING DO NOT CHANGE ONCE ISLANDS HAVE BEEN MADE.
+
+  island

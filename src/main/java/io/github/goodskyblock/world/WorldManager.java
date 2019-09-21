@@ -12,7 +12,11 @@ public class WorldManager {
         this.islandWorld = Bukkit.getWorld("GoodSkyblockIslandWorld");
     }
 
-
+    /**
+     * This gets an instance of the world if the world is not created it will create one.
+     * 
+     * @return the island world.
+     */
     public World getIslandWorld() {
         if (this.islandWorld == null) {
             this.islandWorld = WorldCreator.name("GoodSkyblockIslandWorld")
