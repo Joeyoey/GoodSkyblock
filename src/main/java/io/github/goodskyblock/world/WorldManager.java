@@ -14,7 +14,7 @@ public class WorldManager {
 
     /**
      * This gets an instance of the world if the world is not created it will create one.
-     * 
+     *
      * @return the island world.
      */
     public World getIslandWorld() {

@@ -28,4 +28,5 @@ public class SettingsConfig extends Config {
 
     public static final int GRID_SIZE = newKey("world-options.grid-size", 200, true);
 
+    public static final int ISLAND_DIAMETER = newKey("world-options.default-island-diameter", 100);
 }

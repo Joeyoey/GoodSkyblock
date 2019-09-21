@@ -19,4 +19,4 @@ database:
 world-options:
   grid-size: 200 # This corresponds to 20,000 islands spaces in your world, WARNING DO NOT CHANGE ONCE ISLANDS HAVE BEEN MADE.
 
-  island
+  default-island-diameter: 100
