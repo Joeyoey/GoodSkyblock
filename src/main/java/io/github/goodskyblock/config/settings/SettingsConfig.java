@@ -20,4 +20,7 @@ public class SettingsConfig extends Config {
         int connectionTimeout = newKey("database.pool-settings.connection-timeout", 5000);
        return new MySqlCredentials(host, port, database, username, password, maxPoolSize, minIdleConnections, maxLifetime, connectionTimeout);
     });
+
+    public static final int GRID_SIZE = newKey("world-options.grid-size", 200, true);
+
 }
