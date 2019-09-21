@@ -10,7 +10,6 @@ import static org.bukkit.Bukkit.createChunkData;
 
 public class WorldGenerator extends ChunkGenerator {
 
-
     @Override
     public ChunkGenerator.ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, ChunkGenerator.BiomeGrid biome) {
         ChunkGenerator.ChunkData chunk = createChunkData(world);

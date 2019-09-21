@@ -4,12 +4,14 @@ import io.github.goodskyblock.cache.IslandCache;
 import io.github.goodskyblock.storage.Storage;
 import io.github.goodskyblock.storage.implementations.YamlStorage;
 import io.github.goodskyblock.world.WorldGenerator;
+import io.github.goodskyblock.world.WorldManager;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Skyblock extends JavaPlugin {
     private Storage storage;
     private IslandCache islandCache;
+    private WorldManager worldManager;
 
     @Override
     public void onLoad() {
@@ -18,6 +20,7 @@ public final class Skyblock extends JavaPlugin {
     @Override
     public void onEnable() {
         this.storage = new YamlStorage();
+        this.worldManager = new WorldManager();
         this.islandCache = new IslandCache(this, this.storage);
     }
 
@@ -33,5 +36,7 @@ public final class Skyblock extends JavaPlugin {
         return islandCache;
     }
 
-
+    public WorldManager getWorldManager() {
+        return worldManager;
+    }
 }
