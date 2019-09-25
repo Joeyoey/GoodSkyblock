@@ -141,4 +141,7 @@ public final class JoLocation implements Serializable {
         hash = 19 * hash + (int) (Double.doubleToLongBits(this.z) ^ (Double.doubleToLongBits(this.z) >>> 32));
         return hash;
     }
+
+
+
 }

@@ -10,7 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class Skyblock extends JavaPlugin {
     private Storage storage;
     private IslandCache islandCache;
-    private WorldManager worldManager;
+    private static WorldManager worldManager;
     private Grid grid;
 
     @Override
@@ -20,7 +20,7 @@ public final class Skyblock extends JavaPlugin {
     @Override
     public void onEnable() {
         this.storage = new YamlStorage();
-        this.worldManager = new WorldManager();
+        worldManager = new WorldManager();
         this.grid = new Grid();
         this.islandCache = new IslandCache(this, this.storage);
     }
@@ -37,7 +37,7 @@ public final class Skyblock extends JavaPlugin {
         return this.islandCache;
     }
 
-    public WorldManager getWorldManager() {
-        return this.worldManager;
+    public static WorldManager getWorldManager() {
+        return worldManager;
     }
 }
