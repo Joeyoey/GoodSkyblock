@@ -1,8 +1,9 @@
 package io.github.goodskyblock.island;
 
 import com.google.common.collect.Maps;
+import io.github.goodskyblock.Constants;
 import io.github.goodskyblock.Skyblock;
-import io.github.goodskyblock.config.settings.SettingsConfig;
+import io.github.goodskyblock.config.SettingsKeys;
 import io.github.goodskyblock.services.JoLocation;
 import org.bukkit.Location;
 
@@ -24,7 +25,7 @@ public class Island {
         this.owner = owner;
         this.members.put(owner, 0); // puts the island owner at the highest permission "0"
         this.locked = false; // locks the island initially
-        this.islandSize = SettingsConfig.ISLAND_DIAMETER; // sets the island size to the default.
+        this.islandSize = Constants.getIslandDiameter(); // sets the island size to the default.
         this.islandworth = 0;
     }
 
