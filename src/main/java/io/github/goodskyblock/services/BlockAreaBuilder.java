@@ -2,6 +2,7 @@ package io.github.goodskyblock.services;
 
 import io.github.goodskyblock.utilobjects.FakeBlock;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -94,8 +95,10 @@ public class BlockAreaBuilder {
             stream.writeDouble(entry.getKey().getY());
             // Write the z value of the vector
             stream.writeDouble(entry.getKey().getZ());
-            // Write the int of the material in the FakeBlock
-            stream.writeInt(entry.getValue().getMat());
+            // Write the length of the Material name
+            stream.writeInt(entry.getValue().getMat().name().length());
+            // Writes the Material name to the stream.
+            stream.writeChars(entry.getValue().getMat().name());
             // Write the byte for the data of the FakeBlock
             stream.writeByte(entry.getValue().getData());
             // Write whether the block is a chest or not
@@ -138,7 +141,12 @@ public class BlockAreaBuilder {
             // Reads the next double as value Z
             double z = stream.readDouble();
             // Reads the next int as value mat
-            int mat = stream.readInt();
+            int matLength = stream.readInt();
+            String materialString = "";
+            // Reads the material string from the stream.
+            for (int a = 0; a < matLength; a++) materialString += stream.readChar();
+            // Converts the material from string to Material.
+            Material mat = Material.matchMaterial(materialString);
             // Reads the next byte as value data
             byte data = stream.readByte();
             // Reads whether the block is a chest or not

@@ -1,18 +1,28 @@
 package io.github.goodskyblock.services;
 
+import io.github.goodskyblock.Skyblock;
+import io.github.goodskyblock.utilobjects.FakeBlock;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.data.Levelled;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
-public class ToBeReWorked {
+public class BlockArea {
 
-    /*
-    public void setSquare(final Material material, final Location location1, final Location location2) {
-        final World world = location1.getWorld();
+    private Skyblock plugin;
+
+    public BlockArea(Skyblock instance) { this.plugin = instance; }
+
+
+    public void setSquare(Material material, Location location1, Location location2) {
+        World world = location1.getWorld();
         int highestX = Math.max(location2.getBlockX(), location1.getBlockX());
         int lowestX = Math.min(location2.getBlockX(), location1.getBlockX());
 
@@ -65,8 +75,8 @@ public class ToBeReWorked {
         }.runTaskAsynchronously(plugin);
     }
 
-    public Map<Vector, FakeBlocks> toVectorMap(Location center, Location corner1, Location corner2, boolean relative) {
-        Map<Vector, FakeBlocks> blocks = new HashMap<>();
+    public Map<Vector, FakeBlock> toVectorMap(Location center, Location corner1, Location corner2, boolean relative) {
+        Map<Vector, FakeBlock> blocks = new HashMap<>();
 
         Long start = System.currentTimeMillis();
 
@@ -90,10 +100,17 @@ public class ToBeReWorked {
                 for (int y = lowestY; y <= highestY; y++) {
                     Location location = new Location(world, x, y, z);
                     Vector middle = center.toVector().clone();
-                    @SuppressWarnings("deprecation")
-                    FakeBlocks block = new FakeBlocks(location.getBlock().getTypeId(), location.getBlock().getData());
-                    Vector result = middle.subtract(location.toVector());
-                    blocks.put(result, block);
+                    if (location.getBlock().getType().equals(Material.CHEST) || location.getBlock().getType().equals(Material.TRAPPED_CHEST)) {
+                        ItemStack[] contents = ((org.bukkit.block.Chest) location.getBlock().getState()).getInventory().getContents();
+                        FakeBlock block = new FakeBlock(location.getBlock().getType(), location.getBlock().getData(), contents);
+                        Vector result = middle.subtract(location.toVector());
+                        blocks.put(result, block);
+                    } else {
+                        @SuppressWarnings("deprecation")
+                        FakeBlock block = new FakeBlock(location.getBlock().getType(), location.getBlock().getData());
+                        Vector result = middle.subtract(location.toVector());
+                        blocks.put(result, block);
+                    }
                 }
             }
         }
@@ -104,14 +121,14 @@ public class ToBeReWorked {
 
     }
 
-
+/*
     public void saveBlockArea(Location center, Location corner1, Location corner2, String name, boolean relative) {
         plugin.getAreas().put(name.toUpperCase(), toVectorMap(center, corner1, corner2, relative));
         Bukkit.getLogger().severe(plugin.getAreas().size() + " number of blockareas, " + plugin.getAreas().get(name.toUpperCase()).size() + " number of objects in subMap");
     }
+*/
 
-
-    public void pasteBlockArea(Map<Vector, FakeBlocks> map, Location center, int blocksPerPaste) {
+    public void pasteBlockArea(Map<Vector, FakeBlock> map, Location center, int blocksPerPaste) {
         int i = 1;
         int j = 0;
         int count = 40;
@@ -121,17 +138,29 @@ public class ToBeReWorked {
         if (blocksPerPaste == -1) {
             count = 1000;
         }
-        for (Entry<Vector, FakeBlocks> a : map.entrySet()) {
+        for (Map.Entry<Vector, FakeBlock> a : map.entrySet()) {
             Vector middle = center.toVector().clone();
             new BukkitRunnable() {
 
-                @SuppressWarnings("deprecation")
                 @Override
                 public void run() {
-                    middle.subtract(a.getKey()).toLocation(center.getWorld()).getBlock().setTypeIdAndData(a.getValue().getMat(), a.getValue().getData(), true);
+                    if (a.getValue().isChest()) {
+                        middle.subtract(a.getKey()).toLocation(center.getWorld()).getBlock().setType(a.getValue().getMat(), true);
+                        Levelled levelledData = (Levelled) middle.subtract(a.getKey()).toLocation(center.getWorld()).getBlock().getBlockData();
+                        levelledData.setLevel(a.getValue().getData());
+                        middle.subtract(a.getKey()).toLocation(center.getWorld()).getBlock().setBlockData(levelledData, true);
+                        Chest chest = (Chest) middle.subtract(a.getKey()).toLocation(center.getWorld()).getBlock().getState();
+                        chest.getInventory().setContents(a.getValue().getItemStacks());
+                        chest.update();
+                    } else {
+                        middle.subtract(a.getKey()).toLocation(center.getWorld()).getBlock().setType(a.getValue().getMat(), true);
+                        Levelled levelledData = (Levelled) middle.subtract(a.getKey()).toLocation(center.getWorld()).getBlock().getBlockData();
+                        levelledData.setLevel(a.getValue().getData());
+                        middle.subtract(a.getKey()).toLocation(center.getWorld()).getBlock().setBlockData(levelledData, true);
+                    }
                 }
 
-            }.runTaskLater(plugin, i * 1);
+            }.runTaskLater(plugin, i);
             if (j % count == 0) {
                 i++;
             }
@@ -140,7 +169,7 @@ public class ToBeReWorked {
     }
 
 
-    public void pasteBlockArea(Map<Vector, FakeBlocks> map, int x, int y, int z, String world, int blocksPerPaste) {
+    public void pasteBlockArea(Map<Vector, FakeBlock> map, int x, int y, int z, String world, int blocksPerPaste) {
         int i = 1;
         int j = 0;
         Vector center = new Vector(x, y, z);
@@ -152,22 +181,33 @@ public class ToBeReWorked {
         if (blocksPerPaste == -1) {
             count = 1000;
         }
-        for (Entry<Vector, FakeBlocks> a : map.entrySet()) {
+        for (Map.Entry<Vector, FakeBlock> a : map.entrySet()) {
             Vector middle = center.clone();
             new BukkitRunnable() {
 
-                @SuppressWarnings("deprecation")
                 @Override
                 public void run() {
-                    middle.subtract(a.getKey()).toLocation(worlda).getBlock().setTypeIdAndData(a.getValue().getMat(), a.getValue().getData(), true);
+                    if (a.getValue().isChest()) {
+                        middle.subtract(a.getKey()).toLocation(worlda).getBlock().setType(a.getValue().getMat(), true);
+                        Levelled levelledData = (Levelled) middle.subtract(a.getKey()).toLocation(worlda).getBlock().getBlockData();
+                        levelledData.setLevel(a.getValue().getData());
+                        middle.subtract(a.getKey()).toLocation(worlda).getBlock().setBlockData(levelledData, true);
+                        Chest chest = (Chest) middle.subtract(a.getKey()).toLocation(worlda).getBlock().getState();
+                        chest.getInventory().setContents(a.getValue().getItemStacks());
+                        chest.update();
+                    } else {
+                        middle.subtract(a.getKey()).toLocation(worlda).getBlock().setType(a.getValue().getMat(), true);
+                        Levelled levelledData = (Levelled) middle.subtract(a.getKey()).toLocation(worlda).getBlock().getBlockData();
+                        levelledData.setLevel(a.getValue().getData());
+                        middle.subtract(a.getKey()).toLocation(worlda).getBlock().setBlockData(levelledData, true);
+                    }
                 }
 
-            }.runTaskLater(plugin, i * 1);
+            }.runTaskLater(plugin, i);
             if (j % count == 0) {
                 i++;
             }
             j++;
         }
     }
-    */
 }
